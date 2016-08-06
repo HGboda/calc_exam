@@ -156,7 +156,106 @@ void initbuf()
 
 }
 
+char * testcase(char (*inputbuf)[10],char *verifybuf)
+{
+  int in1,in2;
+  int calcflag = 0;
+  char * retbuf;
 
+  stackinit();
+  set_letter();
+  initbuf();
+
+  
+  int testcnt = 0;
+  int resultcnt = 0;
+  // char testbuf[][10] = {"XIV","LX"};
+  char (*testbuf)[10];
+  char *resultbuf;
+  testbuf = inputbuf;
+  resultbuf = verifybuf;
+  // char resultbuf[][10] = {"LXXIV"};
+
+  while(1)
+  {
+    
+    if(stacklen() == 2 && calcflag ==0){
+      printf("input + or - letter \n");
+      calcflag = 1;
+      memcpy(inbuf,"+",sizeof(char));
+      
+    }
+    else if(stacklen() == 1 && calcflag == 1){
+      printf("input = letter \n");
+      calcflag = 0;
+      memcpy(inbuf,"=",sizeof(char));
+    }
+    else{
+      // printf("input rome letter \n");
+      if (testcnt >= 2){
+          break;
+      } 
+      memcpy(inbuf,testbuf[testcnt],sizeof(testbuf[testcnt]));
+      printf("input rome letter %s\n",inbuf);
+      testcnt += 1;
+    }
+   
+    // fgets(inbuf,100,stdin);
+    
+
+    if(inbuf[0]=='+'||inbuf[0]=='-'||inbuf[0]=='=')
+    {
+      if(inbuf[0]=='=')
+      {
+        if(isEmpty(0)){
+            printf("no input in stack\n");
+        }
+        else if(head[0]->data<1){
+            printf("out of range exception\n");
+        }
+        else{
+            retbuf = intToletter(head[0]->data,outbuf);
+            printf("result %s\n",retbuf);
+            pop(0);
+            if (!strcmp(retbuf,resultbuf)){
+              printf("result success!!\n");
+            }
+            else{
+              printf("result fail!!\n");
+            }
+        
+        }
+        
+      }
+      else if(head[0]->data==-1||head[0]->next->data==-1){
+          printf("no data in stack\n");
+      }
+      else 
+      {
+        in1=pop(0);
+        in2=pop(0);
+        if(inbuf[0]=='+')
+        { 
+          push(0,in1+in2); 
+        }
+        else if(inbuf[0]=='-')
+        {
+          push(0,in2-in1);
+        }
+        
+      }
+    }
+    else
+    {
+      push(0,letterToint(inbuf));
+      
+    }
+  }
+
+  return retbuf;
+}
+
+#ifndef UNIT_TEST
 int main()
 {
     int in1,in2;
@@ -225,5 +324,7 @@ int main()
         
       }
     }
-
+    
+    
 }
+#endif
